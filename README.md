@@ -15,7 +15,8 @@ Tools Resources:
 
 Step 2: Project Description
 Project Overview:
-After finalizing our communication plan, Group E chose to create a Point of Sale (POS) System designed for online retailers, with functionality tailored to inventory and order management. This POS system is intended to improve stock and order management for retailers of all sizes, particularly those in online marketplaces similar to Amazon.com.
+After finalizing our communication plan, Group E chose to create a Point of Sale (POS) System designed for online retailers, with functionality tailored to inventory and order management. 
+This POS system is intended to improve stock and order management for retailers of all sizes, particularly those in online marketplaces similar to Amazon.com.
 Client:
 The client is an online retail company that requires efficient inventory tracking and order management. This solution will help small-to-medium-sized businesses streamline their inventory and sales processes.
 Scope of the System:
@@ -58,8 +59,8 @@ To ensure efficient workflow, roles have been assigned to team members as follow
     3. Tommy - Feature Implementation:
         ◦ Focuses on integrating features like order tracking, item management, and total calculations.
         ◦ Works closely with the back-end developer to ensure features align with data handling needs.
-    4. John - TBD::
-        ◦ An additional role will be assigned as specific needs arise, potentially covering testing, documentation, or additional development tasks.
+    4. John - Testing:
+        ◦ Focus will be on testing and integration as well as database management.
 Trello Resources for Project Management:
     • Introduction to Kanban Boards
     • Using Trello for Software Project Management
