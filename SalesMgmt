@@ -1,0 +1,75 @@
+class InventoryApp:
+    def __init__(self, root):
+        self.cart = {}  # Cart to store items and their quantities
+        self.tax_rate = 0.07  # Example tax rate: 7%
+
+        # Cart and Checkout Section
+        cart_label = ttk.Label(root, text="Cart:")
+        cart_label.grid(column=1, row=2, pady=10)
+
+        self.cart_display = tk.Text(root, height=10, width=50, font=('MS Serif', 16))
+        self.cart_display.grid(column=1, row=3, columnspan=2, padx=20)
+
+        checkout_button = ttk.Button(root, text="Checkout", command=self.checkout)
+        checkout_button.grid(column=3, row=3, padx=20, pady=10)
+
+        self.total_label = ttk.Label(root, text="Total: $0.00")
+        self.total_label.grid(column=1, row=4, pady=10)
+
+    def update_cart_display(self):
+        """Update the cart display and calculate the total."""
+        self.cart_display.delete('1.0', tk.END)
+        total = 0
+        for item_id, quantity in self.cart.items():
+            item = self.system.inventory[item_id]
+            line = f"{item.name} x {quantity} = ${item.price * quantity:.2f}\n"
+            self.cart_display.insert(tk.END, line)
+            total += item.price * quantity
+
+        total_with_tax = total + (total * self.tax_rate)
+        self.total_label.config(text=f"Total: ${total_with_tax:.2f}")
+
+    def add_to_cart(self, item_id, quantity):
+        """Add an item to the cart."""
+        if item_id in self.system.inventory:
+            if item_id in self.cart:
+                self.cart[item_id] += quantity
+            else:
+                self.cart[item_id] = quantity
+            self.update_cart_display()
+        else:
+            self.display_message("Item not found in inventory.")
+
+    def checkout(self):
+        """Handle checkout and payment."""
+        total = 0
+        for item_id, quantity in self.cart.items():
+            item = self.system.inventory[item_id]
+            total += item.price * quantity
+
+        total_with_tax = total + (total * self.tax_rate)
+        payment_window = tk.Toplevel(self.root)
+        payment_window.title("Payment")
+
+        tk.Label(payment_window, text=f"Total: ${total_with_tax:.2f}").grid(row=0, column=0, columnspan=2, pady=10)
+
+        tk.Label(payment_window, text="Payment Amount:").grid(row=1, column=0, pady=10)
+        payment_entry = tk.Entry(payment_window)
+        payment_entry.grid(row=1, column=1, pady=10)
+
+        def process_payment():
+            try:
+                payment = float(payment_entry.get())
+                if payment >= total_with_tax:
+                    change = payment - total_with_tax
+                    self.cart.clear()
+                    self.update_cart_display()
+                    self.display_message(f"Payment successful! Change: ${change:.2f}")
+                    payment_window.destroy()
+                else:
+                    self.display_message("Insufficient payment amount.")
+            except ValueError:
+                self.display_message("Invalid payment amount.")
+
+        pay_button = ttk.Button(payment_window, text="Pay", command=process_payment)
+        pay_button.grid(row=2, column=0, columnspan=2, pady=10)
