@@ -82,13 +82,17 @@ class InventoryApp:
         new_order_button = ttk.Button(root, width=20, text="Start New Order", command=self.add_new_order)
         new_order_button.grid(column=0, row=1, padx=15, pady=(0, 340))
 
-        update_item_button = ttk.Button(root, width=20, text="Update Item").grid(column=0, row=1, padx=15, pady=(0,250))
+        update_item_button = ttk.Button(root, width=20, text="Update Item")
+        update_item_button.grid(column=0, row=1, padx=15, pady=(0,250))
 
-        delete_item_button = ttk.Button(root, width=20, text="Remove Item").grid(column=0, row=1, padx=15, pady=(0,160))
+        delete_item_button = ttk.Button(root, width=20, text="Remove Item")
+        delete_item_button.grid(column=0, row=1, padx=15, pady=(0,160))
 
-        add_order_buton = ttk.Button(root, width=20, text="Add to Order").grid(column=1, row=99, pady=20)
+        add_order_buton = ttk.Button(root, width=20, text="Add to Order")
+        add_order_buton.grid(column=1, row=99, pady=20)
 
-        checkout_button = ttk.Button(root, width=20, text="Checkout", command=self.checkout_window).grid(column=2, row=99, padx=10, sticky=tk.E)
+        checkout_button = ttk.Button(root, width=20, text="Checkout", command=self.checkout_window)
+        checkout_button.grid(column=2, row=99, padx=10, sticky=tk.E)
 
         exit_button = ttk.Button(root, text="Quit Program", width=20, command=root.destroy)
         exit_button.grid(column=0, row=99, pady=20)
@@ -129,7 +133,9 @@ class InventoryApp:
                 newItemWindow.destroy()
             else:
                 pass
-
+        
+        '''New Item functionality which will automatically instantiate an ID, but will ask for
+        a name, price, quantity and description. THIS CONTAINS ERRORS STILL'''
         add_item_window = tk.Toplevel(self.root)
         add_item_window.title("Add New Item")
         add_item_window.attributes('-topmost', True)
@@ -162,18 +168,24 @@ class InventoryApp:
         cancel_button.grid(row=5, column=1, padx=10, pady=10)
 
     def checkout_window(self):
-
+        '''Checkout Window which will display total amount due & have selection of payment tender,
+        will be either Cash or CC and will update dynamically based on radio buttion selection'''
         selected_var = tk.IntVar(value=1)
         change = "0"
         #text_var = tk.StringVar(value=change_amt)
 
+        
         def calc_change():
+            '''change calculator that will convert amount due & tendered amounts to float type and totalize'''
             total = total_amt.cget("text")
             tendered = tendered_amt.get()
             change = float(total) - float(tendered)
             change_amt.configure(text=change)
 
+
         def cc_checkout():
+            '''This is one half of the radiobutton function which will remove the cash tender items
+            and replace with CC checkout items and contain all functionality for same'''
             cash_label.grid_forget()
             tendered_amt.grid_forget()
             cash_submit.grid_forget()
@@ -190,6 +202,8 @@ class InventoryApp:
             cc_exp.grid(row=4, column=1, padx=10, pady=10)
 
         def cash_checkout():
+            '''This is one half of the radiobutton function which will remove the CC tender items
+            and replace with Cash checkout items and contain all their respective functionality'''
             cash_label = ttk.Label(checkout_window, text="Amount Tendered")
             cash_label.grid(row=3, column=0, padx=10, pady=10)
 
@@ -205,6 +219,7 @@ class InventoryApp:
             change_amt = ttk.Label(checkout_window, text=change)
             change_amt.grid(row=4, column=1, padx=10, pady=10)
 
+        '''Checkout window instantiation'''
         checkout_window = tk.Toplevel(self.root)
         checkout_window.title("Checkout")
         checkout_window.attributes('-topmost', True)
@@ -214,6 +229,7 @@ class InventoryApp:
         total_amt = ttk.Label(checkout_window, text="107.00")
         total_amt.grid(row=0, column=1, padx=10, pady=10)
 
+        '''Checkout radiobuttons which will let the user decide between CC & Cash and will dynamically update'''    
         ttk.Label(checkout_window, text="Checkout Method").grid(row=1, column=0, padx=10, pady=10)
         ttk.Radiobutton(checkout_window, text="Credit Card", variable=selected_var, value=2, command=cc_checkout).grid(row=2, column=0, padx=10, pady=10)
         ttk.Radiobutton(checkout_window, text="Cash", variable=selected_var, value=1, command=cash_checkout).grid(row=2, column=1, padx=10, pady=10)
