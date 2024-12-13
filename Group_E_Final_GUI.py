@@ -38,27 +38,21 @@ class InventoryApp:
         image_label.grid(row=0, column=0)
 
         # Search bar setup
-        search_label = ttk.Label(root, text="Search Inventory, or Orders:")
-        search_label.grid(column=1, row=0, pady=20)
-
-        self.search_menu = ttk.Combobox(root, font=('MS Serif', 16), width=10, values=("Inventory", "Orders"))
-        self.search_menu.grid(column=2, row=0, padx=(0, 200), pady=20)
-
-        self.search_bar = ttk.Entry(root, width=22, font=('MS Serif', 16)).grid(column=2, row=0, padx=(200, 0), pady=20)
+        search_bar = ttk.Entry(root, width=22, font=('MS Serif', 16))
+        search_bar.grid(column=1, row=0, padx=5, pady=20)
 
         search_button = ttk.Button(root, text="Search", command=self.search_inventory)
-        search_button.grid(column=3, row=0, padx=(0, 20), pady=20)
+        search_button.grid(column=2, row=0, padx=20, pady=20, sticky=tk.W)
 
         # Output canvas
-        item_canvas = tk.Canvas(root, height=20, width=35, borderwidth=5)
-        item_canvas.grid(column=1, row=1, padx=10, sticky=(tk.W, tk.E, tk.S, tk.N))
+        item_name = "Checkmate"
+        item_price = 50
+        item_quant = 10
+        item_desc = "This is a description of a test item. Usage may vary with your experience."
 
-        text_id = item_canvas.create_text(
-            100,
-            100,
-            text=(f"Item ID: {item_count} \nItem Name: Test Item\nItem Price: $100\nItem Quantity: 50\nDescription: A test item."),
-            font=("MS Serif", 14)
-        )
+        item_canvas = tk.Text(root, height=10, width=35, font=("MS Serif", 14))
+        item_canvas.grid(column=1, row=1, padx=10, sticky=(tk.W, tk.E, tk.S, tk.N))
+        item_canvas.insert(tk.END, f"Item ID: {item_count} \nItem Name: {item_name}\nItem Price: ${item_price}\nItem Quantity: {item_quant}\n\nDescription: {item_desc}")
 
         output_listbox = tk.Listbox(root, height=10, width=30, font=('MS Serif', 16), activestyle='none')
         output_listbox.grid(column=2, row=1, padx=10, sticky=(tk.E, tk.N))
@@ -83,14 +77,11 @@ class InventoryApp:
         remove_from_order = ttk.Button(root, width=20, text="Remove from Order")
         remove_from_order.grid(column=3, row=1, padx=15, pady=(0,250))
 
-        new_order_button = ttk.Button(root, width=20, text="Start New Order", command=self.add_new_order)
-        new_order_button.grid(column=0, row=1, padx=15, pady=(0, 340))
-
         update_item_button = ttk.Button(root, width=20, text="Update Item")
-        update_item_button.grid(column=0, row=1, padx=15, pady=(0,250))
+        update_item_button.grid(column=0, row=1, padx=15, pady=(0,340))
 
         delete_item_button = ttk.Button(root, width=20, text="Delete Item")
-        delete_item_button.grid(column=0, row=1, padx=15, pady=(0,160))
+        delete_item_button.grid(column=0, row=1, padx=15, pady=(0,250))
 
         add_order_buton = ttk.Button(root, width=20, text="Add to Order")
         add_order_buton.grid(column=1, row=99, pady=20)
