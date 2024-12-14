@@ -7,7 +7,7 @@ from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import PIL
 import os
-from inventory_system import InventoryManagementSystem, InventoryItem 
+from inventory_system import InventoryManagementSystem, InventoryItem
 
 item_count = 100
 
@@ -20,7 +20,7 @@ class InventoryApp:
 
         # Style configuration
         style = ttk.Style()
-        style.theme_use('winnative')
+        style.theme_use('clam')  # Changed from 'winnative' to 'clam'
         style.configure('.', font=('MS Serif', 16))
         style.configure('TButton', background='#b2948b', foreground='#b2948b')
         style.configure('TLabel', background='#2a3b4c', foreground="white")
@@ -57,7 +57,7 @@ class InventoryApp:
         output_listbox = tk.Listbox(root, height=10, width=30, font=('MS Serif', 16), activestyle='none')
         output_listbox.grid(column=2, row=1, padx=10, sticky=(tk.E, tk.N))
 
-        output_listbox.insert(1, "Item 1")
+        output_listbox.insert(1, f"ID: {item_count} | {item_name} | ${item_price} | Qty: {item_quant}")
         output_listbox.insert(2, "Item 2")
         output_listbox.insert(3, "Item 3")
 
@@ -186,7 +186,6 @@ class InventoryApp:
             change_amt.configure(text=change)
 
 
-
         def cc_checkout(*args):
             '''This is one half of the radiobutton function which will remove the cash tender items
             and replace with CC checkout items and contain all functionality for same'''
@@ -204,6 +203,7 @@ class InventoryApp:
             cc_exp.grid(row=6, column=1, padx=10, pady=(0,10))
             
             
+
 
         def cash_checkout(*args):
             '''This is one half of the radiobutton function which will remove the CC tender items
@@ -275,7 +275,6 @@ class InventoryApp:
 
         order_cancel = ttk.Button(checkout_window, text="Cancel", command=lambda: confirmCancel(checkout_window))
         order_cancel.grid(row=7, column=0, padx=10, pady=5)
-        
 
 
     def add_new_order(self):
