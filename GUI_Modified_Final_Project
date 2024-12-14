@@ -1,0 +1,170 @@
+
+
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+class InventoryItem:
+    def __init__(self, item_id, name, quantity, price):
+        self.item_id = item_id
+        self.name = name
+        self.quantity = quantity
+        self.price = price
+
+    def __str__(self):
+        return f"ID: {self.item_id}, Name: {self.name}, Quantity: {self.quantity}, Price: ${self.price:.2f}"
+
+class InventoryManagementSystem:
+    def __init__(self):
+        self.inventory = {}
+
+    def add_item(self, item):
+        if item.item_id in self.inventory:
+            return False  # Item already exists
+        self.inventory[item.item_id] = item
+        return True
+
+    def delete_item(self, item_id):
+        if item_id in self.inventory:
+            del self.inventory[item_id]
+            return True
+        return False
+
+    def update_item(self, item_id, name, quantity, price):
+        if item_id in self.inventory:
+            self.inventory[item_id].name = name
+            self.inventory[item_id].quantity = quantity
+            self.inventory[item_id].price = price
+            return True
+        return False
+
+    def search_items(self, query):
+        results = []
+        for item in self.inventory.values():
+            if query.lower() in item.name.lower():
+                results.append(item)
+        return results
+
+class InventoryApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Inventory Management System")
+        self.system = InventoryManagementSystem()
+
+        self.main_frame = ttk.Frame(self.root, padding="10")
+        self.main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+
+        self.search_label = ttk.Label(self.main_frame, text="Search Inventory:")
+        self.search_label.grid(row=0, column=0, sticky=tk.W)
+        self.search_entry = ttk.Entry(self.main_frame)
+        self.search_entry.grid(row=0, column=1, sticky=tk.W)
+        self.search_button = ttk.Button(self.main_frame, text="Search", command=self.search_inventory)
+        self.search_button.grid(row=0, column=2, sticky=tk.W)
+
+        self.output_area = tk.Text(self.main_frame, width=50, height=15)
+        self.output_area.grid(row=1, column=0, columnspan=3, pady=10)
+
+        self.add_button = ttk.Button(self.main_frame, text="Add New Item", command=self.add_new_item)
+        self.add_button.grid(row=2, column=0, pady=5)
+        self.update_button = ttk.Button(self.main_frame, text="Update Item", command=self.update_item)
+        self.update_button.grid(row=2, column=1, pady=5)
+        self.delete_button = ttk.Button(self.main_frame, text="Delete Item", command=self.delete_item)
+        self.delete_button.grid(row=2, column=2, pady=5)
+
+    def add_new_item(self):
+        add_window = tk.Toplevel(self.root)
+        add_window.title("Add New Item")
+
+        ttk.Label(add_window, text="Item ID:").grid(row=0, column=0, padx=5, pady=5)
+        item_id_entry = ttk.Entry(add_window)
+        item_id_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        ttk.Label(add_window, text="Name:").grid(row=1, column=0, padx=5, pady=5)
+        name_entry = ttk.Entry(add_window)
+        name_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        ttk.Label(add_window, text="Quantity:").grid(row=2, column=0, padx=5, pady=5)
+        quantity_entry = ttk.Entry(add_window)
+        quantity_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        ttk.Label(add_window, text="Price:").grid(row=3, column=0, padx=5, pady=5)
+        price_entry = ttk.Entry(add_window)
+        price_entry.grid(row=3, column=1, padx=5, pady=5)
+
+        def save_item():
+            item_id = item_id_entry.get()
+            name = name_entry.get()
+            quantity = quantity_entry.get()
+            price = price_entry.get()
+            try:
+                quantity = int(quantity)
+                price = float(price)
+                item = InventoryItem(item_id, name, quantity, price)
+                if self.system.add_item(item):
+                    messagebox.showinfo("Success", "Item added successfully!")
+                    add_window.destroy()
+                else:
+                    messagebox.showerror("Error", "Item ID already exists.")
+            except ValueError:
+                messagebox.showerror("Error", "Invalid quantity or price.")
+
+        ttk.Button(add_window, text="Save", command=save_item).grid(row=4, column=0, columnspan=2, pady=10)
+
+    def search_inventory(self):
+        query = self.search_entry.get()
+        results = self.system.search_items(query)
+        self.output_area.delete("1.0", tk.END)
+        if results:
+            for item in results:
+                self.output_area.insert(tk.END, str(item) + "\n")
+        else:
+            self.output_area.insert(tk.END, "No items found.")
+
+    def update_item(self):
+        update_window = tk.Toplevel(self.root)
+        update_window.title("Update Item")
+
+        ttk.Label(update_window, text="Item ID:").grid(row=0, column=0, padx=5, pady=5)
+        item_id_entry = ttk.Entry(update_window)
+        item_id_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        ttk.Label(update_window, text="New Name:").grid(row=1, column=0, padx=5, pady=5)
+        name_entry = ttk.Entry(update_window)
+        name_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        ttk.Label(update_window, text="New Quantity:").grid(row=2, column=0, padx=5, pady=5)
+        quantity_entry = ttk.Entry(update_window)
+        quantity_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        ttk.Label(update_window, text="New Price:").grid(row=3, column=0, padx=5, pady=5)
+        price_entry = ttk.Entry(update_window)
+        price_entry.grid(row=3, column=1, padx=5, pady=5)
+
+        def save_update():
+            item_id = item_id_entry.get()
+            name = name_entry.get()
+            quantity = quantity_entry.get()
+            price = price_entry.get()
+            try:
+                quantity = int(quantity)
+                price = float(price)
+                if self.system.update_item(item_id, name, quantity, price):
+                    messagebox.showinfo("Success", "Item updated successfully!")
+                    update_window.destroy()
+                else:
+                    messagebox.showerror("Error", "Item ID not found.")
+            except ValueError:
+                messagebox.showerror("Error", "Invalid quantity or price.")
+
+        ttk.Button(update_window, text="Save", command=save_update).grid(row=4, column=0, columnspan=2, pady=10)
+
+    def delete_item(self):
+        item_id = self.search_entry.get()
+        if self.system.delete_item(item_id):
+            messagebox.showinfo("Success", "Item deleted successfully!")
+        else:
+            messagebox.showerror("Error", "Item ID not found.")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = InventoryApp(root)
+    root.mainloop()
